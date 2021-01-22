@@ -15,8 +15,13 @@ def calculate_accuracy(X: np.ndarray, targets: np.ndarray, model: BinaryModel) -
     Returns:
         Accuracy (float)
     """
+
     # TODO Implement this function (Task 2c)
-    accuracy = 0.0
+    logits = model.forward(X)
+    predictions = np.round(logits)
+    correct = np.isclose(predictions,targets)
+    correct = np.count_nonzero(correct)
+    accuracy = correct/targets.shape[0]*100
     return accuracy
 
 
