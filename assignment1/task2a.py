@@ -30,7 +30,7 @@ def cross_entropy_loss(targets: np.ndarray, outputs: np.ndarray) -> float:
     # TODO implement this function (Task 2a)
     epsilon = 1e-15 # small additional value to make the cross entropy stable for the logarithm function
     C = -np.sum(targets*np.log(outputs + epsilon) + (1-targets)*np.log(1-outputs + epsilon))
-    C = np.average(C)
+    C /= targets.shape[0]
     assert targets.shape == outputs.shape,\
         f"Targets shape: {targets.shape}, outputs: {outputs.shape}"
     return C
@@ -69,7 +69,9 @@ class BinaryModel:
         self.grad = np.zeros_like(self.w)
         assert self.grad.shape == self.w.shape,\
             f"Grad shape: {self.grad.shape}, w: {self.w.shape}"
+        # Calculate the gradient and average it over the batch.
         self.grad = -np.dot(X.transpose(),targets - outputs)
+        self.grad /= targets.shape[0]
 
     def zero_grad(self) -> None:
         self.grad = None
