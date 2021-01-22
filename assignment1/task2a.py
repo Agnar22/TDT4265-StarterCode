@@ -13,6 +13,9 @@ def pre_process_images(X: np.ndarray):
     assert X.shape[1] == 784,\
         f"X.shape[1]: {X.shape[1]}, should be 784"
     # TODO implement this function (Task 2a)
+    X = X/(255.0/2) - 1 
+    bias = np.ones((X.shape[0],1),dtype=X.dtype)
+    X = np.hstack((X,bias))
     return X
 
 
@@ -25,16 +28,19 @@ def cross_entropy_loss(targets: np.ndarray, outputs: np.ndarray) -> float:
         Cross entropy error (float)
     """
     # TODO implement this function (Task 2a)
+    epsilon = 1e-15 # small additional value to make the cross entropy stable for the logarithm function
+    C = -np.sum(targets*np.log(outputs + epsilon) + (1-targets)*np.log(1-outputs + epsilon))
+    C = np.average(C)
     assert targets.shape == outputs.shape,\
         f"Targets shape: {targets.shape}, outputs: {outputs.shape}"
-    return 0
+    return C
 
 
 class BinaryModel:
 
     def __init__(self):
         # Define number of input nodes
-        self.I = None
+        self.I = 785 #Should this be 785 or 784?
         self.w = np.zeros((self.I, 1))
         self.grad = None
 
@@ -46,7 +52,8 @@ class BinaryModel:
             y: output of model with shape [batch size, 1]
         """
         # TODO implement this function (Task 2a)
-        return None
+        X = 1/(1+np.exp(-np.dot(X,self.w)))
+        return X
 
     def backward(self, X: np.ndarray, outputs: np.ndarray, targets: np.ndarray) -> None:
         """
@@ -62,6 +69,7 @@ class BinaryModel:
         self.grad = np.zeros_like(self.w)
         assert self.grad.shape == self.w.shape,\
             f"Grad shape: {self.grad.shape}, w: {self.w.shape}"
+        self.grad = -np.dot(X.transpose(),targets - outputs)
 
     def zero_grad(self) -> None:
         self.grad = None
