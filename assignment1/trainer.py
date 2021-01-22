@@ -71,7 +71,10 @@ class BaseTrainer:
             loss={},
             accuracy={}
         )
-
+        #Util variables for early stopping
+        lowest_loss = float('Inf')
+        no_improvement_counter = 0
+        
         global_step = 0
         for epoch in range(num_epochs):
             train_loader = utils.batch_loader(
@@ -90,5 +93,13 @@ class BaseTrainer:
 
                     # TODO (Task 2d): Implement early stopping here.
                     # You can access the validation loss in val_history["loss"]
+                    no_improvement_counter += 1
+                    if(val_history['loss'][global_step] < lowest_loss):
+                        lowest_loss = val_history['loss'][global_step]
+                        no_improvement_counter = 0
+                    if(no_improvement_counter == 10):
+                        return train_history, val_history
+
+
                 global_step += 1
         return train_history, val_history
