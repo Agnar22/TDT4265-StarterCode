@@ -61,7 +61,7 @@ class SoftmaxModel:
         self.grad = np.zeros_like(self.w)
         assert self.grad.shape == self.w.shape,\
              f"Grad shape: {self.grad.shape}, w: {self.w.shape}"
-        self.grad = - X.T @ (targets-outputs) / targets.shape[0]
+        self.grad = - X.T @ (targets-outputs) / targets.shape[0] - 2 * self.l2_reg_lambda * self.w
 
     def zero_grad(self) -> None:
         self.grad = None

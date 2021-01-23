@@ -129,7 +129,11 @@ if __name__ == "__main__":
     # You can finish the rest of task 4 below this point.
 
     # Plotting of softmax weights (Task 4b)
-    #plt.imsave("task4b_softmax_weight.png", weight, cmap="gray")
+    for img in range(10):
+        weight = model.w[:-1,img]
+        weight = weight - np.min(weight)
+        weight = weight / np.max(weight)
+        plt.imsave(f'task4b_softmax_weight_{img}.png', weight.reshape((28, 28)), cmap="gray")
 
     # Plotting of accuracy for difference values of lambdas (task 4c)
     l2_lambdas = [1, .1, .01, .001]
