@@ -72,6 +72,7 @@ class BaseTrainer:
             accuracy={}
         )
         #Util variables for early stopping
+        early_stopping = True
         lowest_loss = float('Inf')
         no_improvement_counter = 0
         
@@ -97,7 +98,8 @@ class BaseTrainer:
                     if(val_history['loss'][global_step] < lowest_loss):
                         lowest_loss = val_history['loss'][global_step]
                         no_improvement_counter = 0
-                    if(no_improvement_counter == 10):
+                    if(early_stopping and no_improvement_counter == 10):
+                        print("Stopped early at epoch # ", str(epoch))
                         return train_history, val_history
 
 

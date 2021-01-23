@@ -21,7 +21,7 @@ def calculate_accuracy(X: np.ndarray, targets: np.ndarray, model: BinaryModel) -
     predictions = np.round(logits)
     correct = np.isclose(predictions,targets)
     correct = np.count_nonzero(correct)
-    accuracy = correct/targets.shape[0]*100
+    accuracy = correct/targets.shape[0]
     return accuracy
 
 
@@ -72,7 +72,7 @@ if __name__ == "__main__":
     num_epochs = 50
     learning_rate = 0.05
     batch_size = 128
-    shuffle_dataset = True
+    shuffle_dataset = False
 
     # Load dataset
     category1, category2 = 2, 3
@@ -102,6 +102,7 @@ if __name__ == "__main__":
     print("Train accuracy:", calculate_accuracy(X_train, Y_train, model))
     print("Validation accuracy:", calculate_accuracy(X_val, Y_val, model))
 
+    
     # Plot loss for first model (task 2b)
     plt.ylim([0., .2])
     utils.plot_loss(train_history["loss"],

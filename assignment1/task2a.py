@@ -40,7 +40,7 @@ class BinaryModel:
 
     def __init__(self):
         # Define number of input nodes
-        self.I = 785 #Should this be 785 or 784?
+        self.I = 785 
         self.w = np.zeros((self.I, 1))
         self.grad = None
 
