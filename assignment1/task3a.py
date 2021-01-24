@@ -42,9 +42,9 @@ class SoftmaxModel:
         # Stable softmax implementation (subtracting max element keeps the function equivalent)
         weighted_sum = X @ self.w
         max_sum = np.max(weighted_sum, axis=-1, keepdims=True)
-        nominator = np.exp(weighted_sum-max_sum)
-        denominator = np.exp(weighted_sum - max_sum).sum(axis=-1, keepdims=True)
-        return nominator / denominator
+        numerator = np.exp(weighted_sum-max_sum)
+        denominator = numerator.sum(axis=-1, keepdims=True)
+        return numerator / denominator
 
     def backward(self, X: np.ndarray, outputs: np.ndarray, targets: np.ndarray) -> None:
         """
