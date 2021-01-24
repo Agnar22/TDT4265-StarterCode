@@ -39,6 +39,7 @@ class SoftmaxModel:
             y: output of model with shape [batch size, num_outputs]
         """
         # TODO implement this function (Task 3a)
+        # Stable softmax implementation (subtracting max element keeps the function equivalent)
         weighted_sum = X @ self.w
         max_sum = np.max(weighted_sum, axis=-1, keepdims=True)
         nominator = np.exp(weighted_sum-max_sum)
