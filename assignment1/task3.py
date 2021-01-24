@@ -22,6 +22,19 @@ def calculate_accuracy(X: np.ndarray, targets: np.ndarray, model: SoftmaxModel) 
     accuracy = sum(pred == targets_dec) / targets.shape[0]
     return accuracy
 
+def save_weights(model: SoftmaxModel, l2_norm: float):
+    # Plotting of softmax weights (Task 4b)
+    image = None
+    for img in range(10):
+        weight = model.w[:-1,img]
+        weight = weight - np.min(weight)
+        weight = weight / np.max(weight)
+        if image is None:
+            image = weight.reshape((28, 28))
+        else:
+            image = np.hstack((image, weight.reshape((28, 28))))
+    plt.imsave(f'task4b_softmax_weight_{l2_norm}.png', image, cmap="gray")
+
 
 class SoftmaxTrainer(BaseTrainer):
 
@@ -119,26 +132,16 @@ if __name__ == "__main__":
     plt.show()
 
     # Train a model with L2 regularization (task 4b)
-
-    model1 = SoftmaxModel(l2_reg_lambda=1.0)
-    trainer = SoftmaxTrainer(
-        model1, learning_rate, batch_size, shuffle_dataset,
-        X_train, Y_train, X_val, Y_val,
-    )
-    train_history_reg01, val_history_reg01 = trainer.train(num_epochs)
-    # You can finish the rest of task 4 below this point.
-
-    # Plotting of softmax weights (Task 4b)
-    image = None
-    for img in range(10):
-        weight = model.w[:-1,img]
-        weight = weight - np.min(weight)
-        weight = weight / np.max(weight)
-        if image is None:
-            image = weight.reshape((28, 28))
-        else:
-            image = np.hstack((image, weight.reshape((28, 28))))
-    plt.imsave(f'task4b_softmax_weight.png', image, cmap="gray")
+    l2_lambdas = [1.0, 0.0]
+    for l2_reg_lambda in l2_lambdas:
+        model = SoftmaxModel(l2_reg_lambda=l2_reg_lambda)
+        trainer = SoftmaxTrainer(
+            model, learning_rate, batch_size, shuffle_dataset,
+            X_train, Y_train, X_val, Y_val,
+        )
+        train_history_reg01, val_history_reg01 = trainer.train(num_epochs)
+        # You can finish the rest of task 4 below this point.
+        save_weights(model, l2_reg_lambda)
 
     # Plotting of accuracy for difference values of lambdas (task 4c)
     l2_lambdas = [1, .1, .01, .001]
