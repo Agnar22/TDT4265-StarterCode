@@ -144,7 +144,25 @@ if __name__ == "__main__":
         save_weights(model, l2_reg_lambda)
 
     # Plotting of accuracy for difference values of lambdas (task 4c)
-    l2_lambdas = [1, .1, .01, .001]
+    l2_lambdas = [1.0, 0.1, 0.01, 0.001]
+    plt.ylim([0.82, .95])
+    l2_norms = []
+    for l2_reg_lambda in l2_lambdas:
+        model = SoftmaxModel(l2_reg_lambda=l2_reg_lambda)
+        trainer = SoftmaxTrainer(
+            model, learning_rate, batch_size, shuffle_dataset,
+            X_train, Y_train, X_val, Y_val,
+        )
+        train_history_reg01, val_history_reg01 = trainer.train(num_epochs)
+        utils.plot_loss(val_history_reg01["accuracy"], f'val_acc l2: {l2_reg_lambda}')
+        print("l2", np.sum(np.square(model.w)))
+        print("avg", np.average(model.w))
+        print("square", np.square(model.w))
+        l2_norms.append(np.sum(np.square(model.w)))
+    plt.xlabel("Number of Training Steps")
+    plt.ylabel("Accuracy")
+    plt.legend()
+    plt.show()
     plt.savefig("task4c_l2_reg_accuracy.png")
 
     # Task 4e - Plotting of the l2 norm for each weight
