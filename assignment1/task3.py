@@ -144,6 +144,6 @@ if __name__ == "__main__":
     l2_lambdas = [1, .1, .01, .001]
     plt.savefig("task4c_l2_reg_accuracy.png")
 
-    # Task 4d - Plotting of the l2 norm for each weight
+    # Task 4e - Plotting of the l2 norm for each weight
 
-    plt.savefig("task4d_l2_reg_norms.png")
+    plt.savefig("task4e_l2_reg_norms.png")
