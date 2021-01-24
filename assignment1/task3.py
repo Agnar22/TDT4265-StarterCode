@@ -22,7 +22,7 @@ def calculate_accuracy(X: np.ndarray, targets: np.ndarray, model: SoftmaxModel) 
     accuracy = sum(pred == targets_dec) / targets.shape[0]
     return accuracy
 
-def save_weights(model: SoftmaxModel, l2_norm: float):
+def get_importance(model: SoftmaxModel):
     # Plotting of softmax weights (Task 4b)
     image = None
     for img in range(10):
@@ -33,7 +33,7 @@ def save_weights(model: SoftmaxModel, l2_norm: float):
             image = weight.reshape((28, 28))
         else:
             image = np.hstack((image, weight.reshape((28, 28))))
-    plt.imsave(f'task4b_softmax_weight_{l2_norm}.png', image, cmap="gray")
+    return image
 
 
 class SoftmaxTrainer(BaseTrainer):
@@ -132,7 +132,8 @@ if __name__ == "__main__":
     plt.show()
 
     # Train a model with L2 regularization (task 4b)
-    l2_lambdas = [1.0, 0.0]
+    l2_lambdas = [0.0, 1.0]
+    pixel_weights = []
     for l2_reg_lambda in l2_lambdas:
         model = SoftmaxModel(l2_reg_lambda=l2_reg_lambda)
         trainer = SoftmaxTrainer(
@@ -141,7 +142,8 @@ if __name__ == "__main__":
         )
         train_history_reg01, val_history_reg01 = trainer.train(num_epochs)
         # You can finish the rest of task 4 below this point.
-        save_weights(model, l2_reg_lambda)
+        pixel_weights.append(get_importance(model, l2_reg_lambda))
+    plt.imsave(f'task4b_softmax_weight.png', np.array(pixel_weights).reshape((28*len(l2_lambdas), -1)), cmap="gray")
 
     # Plotting of accuracy for difference values of lambdas (task 4c)
     l2_lambdas = [1.0, 0.1, 0.01, 0.001]
