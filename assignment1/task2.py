@@ -40,9 +40,9 @@ class LogisticTrainer(BaseTrainer):
             loss value (float) on batch
         """
         # TODO: Implement this function (task 2b)
-        logits = model.forward(X_batch)
-        model.backward(X_batch,logits,Y_batch)
-        model.w -= learning_rate*model.grad
+        logits = self.model.forward(X_batch)
+        self.model.backward(X_batch,logits,Y_batch)
+        self.model.w -= learning_rate*model.grad
         loss = cross_entropy_loss(Y_batch, logits)
         return loss
 
