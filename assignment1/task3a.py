@@ -15,7 +15,8 @@ def cross_entropy_loss(targets: np.ndarray, outputs: np.ndarray):
     # TODO implement this function (Task 3a)
     assert targets.shape == outputs.shape,\
         f"Targets shape: {targets.shape}, outputs: {outputs.shape}"
-    return - np.sum(targets * np.log(outputs)) / targets.shape[0]
+    epsilon = 1e-15 # small additional value to make the cross entropy stable for the logarithm function
+    return - np.sum(targets * np.log(outputs + epsilon)) / targets.shape[0]
 
 class SoftmaxModel:
 
