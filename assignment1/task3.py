@@ -164,13 +164,13 @@ if __name__ == "__main__":
     plt.xlabel("Number of Training Steps")
     plt.ylabel("Accuracy")
     plt.legend()
-    plt.show()
     plt.savefig("task4c_l2_reg_accuracy.png")
+    plt.show()
 
     # Task 4e - Plotting of the l2 norm for each weight
     plt.bar(np.arange(len(l2_lambdas)), l2_norms, align='center')
     plt.xticks(np.arange((len(l2_lambdas))), l2_lambdas)
     plt.xlabel("l2 lambdas")
     plt.ylabel("L2 norm")
-    plt.show()
     plt.savefig("task4e_l2_reg_norms.png")
+    plt.show()
