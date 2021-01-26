@@ -142,7 +142,7 @@ if __name__ == "__main__":
         )
         train_history_reg01, val_history_reg01 = trainer.train(num_epochs)
         # You can finish the rest of task 4 below this point.
-        pixel_weights.append(get_importance(model, l2_reg_lambda))
+        pixel_weights.append(get_importance(model))
     plt.imsave(f'task4b_softmax_weight.png', np.array(pixel_weights).reshape((28*len(l2_lambdas), -1)), cmap="gray")
 
     # Plotting of accuracy for difference values of lambdas (task 4c)
