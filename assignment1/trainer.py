@@ -72,7 +72,7 @@ class BaseTrainer:
             accuracy={}
         )
         #Util variables for early stopping
-        early_stopping = False
+        early_stopping = False # Set to true to enable early stopping for 2 d)
         lowest_loss = float('Inf')
         no_improvement_counter = 0
         
