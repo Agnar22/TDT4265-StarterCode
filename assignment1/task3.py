@@ -80,7 +80,7 @@ class SoftmaxTrainer(BaseTrainer):
 
 if __name__ == "__main__":
     # hyperparameters DO NOT CHANGE IF NOT SPECIFIED IN ASSIGNMENT TEXT
-    num_epochs = 50
+    num_epochs = 500
     learning_rate = 0.01
     batch_size = 128
     l2_reg_lambda = 0
