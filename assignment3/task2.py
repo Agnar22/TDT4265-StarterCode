@@ -38,6 +38,7 @@ class ExampleModel(nn.Module):
         # Outputs num_classes predictions, 1 for each class.
         # There is no need for softmax activation function, as this is
         # included with nn.CrossEntropyLoss
+        self.fc = nn.Linear(self.num_output_features, self.num_classes)
         self.classifier = nn.Sequential(
             nn.Linear(self.num_output_features, num_classes),
         )
@@ -49,6 +50,9 @@ class ExampleModel(nn.Module):
             x: Input image, shape: [batch_size, 3, 32, 32]
         """
         # TODO: Implement this function (Task  2a)
+        x = self.feature_extractor(x)
+        x = x.view(-1, 32*32*32)
+        x = self.fc(x)
         batch_size = x.shape[0]
         out = x
         expected_shape = (batch_size, self.num_classes)
