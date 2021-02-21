@@ -38,11 +38,10 @@ def compute_loss_and_accuracy(
             #print(f'output_probs: {output_probs.shape}')
 
             # Compute Loss and Accuracy
-            tot_loss += loss_criterion(output_probs, Y_batch)
+            tot_loss += loss_criterion(output_probs, Y_batch) * Y_batch.shape[0]
             num_correct += torch.sum(torch.argmax(output_probs, dim=-1) == Y_batch)
-            #print(num_correct)
     average_loss = tot_loss/tot_samples
-    accuracy = num_correct/tot_samples
+    accuracy = float(num_correct)/tot_samples
     return average_loss, accuracy
 
 
