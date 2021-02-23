@@ -8,6 +8,7 @@ image = Image.open("images/zebra.jpg")
 print("Image shape:", image.size)
 
 model = torchvision.models.resnet18(pretrained=True)
+
 print(model)
 first_conv_layer = model.conv1
 print("First conv layer weight shape:", first_conv_layer.weight.shape)
@@ -47,3 +48,36 @@ def torch_image_to_numpy(image: torch.Tensor):
 
 
 indices = [14, 26, 32, 49, 52]
+
+fig, axs = plt.subplots(2,len(indices))
+
+
+for i in range(len(indices)):
+    act_image = torch_image_to_numpy(activation[0,indices[i],:,:])
+    weight_image = torch_image_to_numpy(first_conv_layer.weight[indices[i],:,:,:])
+
+    axs[0,i].imshow(weight_image)
+    axs[1,i].imshow(act_image, cmap = 'gray')
+
+    #axs[0,i].set_title("Image #" + str(indices[i]))
+plt.savefig('task4b_plot.png')
+plt.show()
+
+# Task 4 c)
+
+indices_4c = [i for i in range(10)]
+model_reduced = torch.nn.Sequential(*list(model.children())[:-2]) #Drop last 2 ResNet Modules
+
+final_activations = model_reduced(image)
+
+fig, axs = plt.subplots(1,len(indices_4c))
+
+for i in range(len(indices_4c)):
+    print(final_activations.shape)
+    print(indices_4c[i])
+    act_image = torch_image_to_numpy(final_activations[0,indices_4c[i],:,:])
+    axs[i].imshow(act_image)
+    #axs[i].set_title("Image #" + str(indices_4c[i]))
+
+plt.savefig('task4c_plot.png')
+plt.show()
