@@ -48,3 +48,9 @@ if __name__ == "__main__":
     trainer.optimizer = torch.optim.Adam(model.parameters(), learning_rate)
     trainer.train()
     create_plots(trainer, "task4a")
+
+    #Get final test accuracy
+    best_model = trainer.load_best_model()
+    [_, test_accuracy] = compute_loss_and_accuracy(dataloaders[2], #This is the test set
+                                 best_model, torch.nn.CrossEntropyLoss())
+    print(test_accuracy)

@@ -53,13 +53,12 @@ fig, axs = plt.subplots(2,len(indices))
 
 
 for i in range(len(indices)):
-    act_image = torch_image_to_numpy(activation[0,indices[i],:,:])
     weight_image = torch_image_to_numpy(first_conv_layer.weight[indices[i],:,:,:])
+    act_image = torch_image_to_numpy(activation[0,indices[i],:,:])
 
     axs[0,i].imshow(weight_image)
     axs[1,i].imshow(act_image, cmap = 'gray')
 
-    #axs[0,i].set_title("Image #" + str(indices[i]))
 plt.savefig('task4b_plot.png')
 plt.show()
 
@@ -76,8 +75,7 @@ for i in range(len(indices_4c)):
     print(final_activations.shape)
     print(indices_4c[i])
     act_image = torch_image_to_numpy(final_activations[0,indices_4c[i],:,:])
-    axs[i].imshow(act_image)
-    #axs[i].set_title("Image #" + str(indices_4c[i]))
+    axs[i].imshow(act_image, cmap = 'gray')
 
 plt.savefig('task4c_plot.png')
 plt.show()
