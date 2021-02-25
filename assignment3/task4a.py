@@ -52,4 +52,4 @@ if __name__ == "__main__":
     #Get final test accuracy
     [_, test_accuracy] = compute_loss_and_accuracy(dataloaders[2], #This is the test set
                                  model, torch.nn.CrossEntropyLoss())
-    print(test_accuracy)
+    print("final test accuracy: ", test_accuracy)
