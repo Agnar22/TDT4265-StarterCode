@@ -37,7 +37,7 @@ class ExampleModel(nn.Module):
       ),
       nn.ReLU(inplace=True),
       nn.MaxPool2d(2, stride=2),
-      nn.Dropout(p=0.2),
+      nn.BatchNorm2d(num_filters, affine=False),
       nn.Conv2d(
         in_channels=num_filters,
         out_channels=2*num_filters,
@@ -55,7 +55,7 @@ class ExampleModel(nn.Module):
       ),
       nn.ReLU(inplace=True),
       nn.MaxPool2d(2, stride=2),
-      nn.Dropout(p=0.2),
+      nn.BatchNorm2d(2*num_filters, affine=False),
       nn.Conv2d(
         in_channels=2*num_filters,
         out_channels=4*num_filters,
@@ -73,7 +73,7 @@ class ExampleModel(nn.Module):
       ),
       nn.ReLU(inplace=True),
       nn.MaxPool2d(2, stride=2),
-      nn.Dropout(p=0.2),
+      nn.BatchNorm2d(4 * num_filters, affine=False),
     )
     self.feature_extractor.apply(self.init_weights)
     # The output of feature_extractor will be [batch_size, num_filters, 16, 16]
@@ -88,6 +88,8 @@ class ExampleModel(nn.Module):
       nn.ReLU(inplace=True),
       # nn.BatchNorm1d(2048, affine=False),
       nn.Linear(256, 128),
+      nn.ReLU(inplace=True),
+      nn.Linear(128, 128),
       nn.ReLU(inplace=True),
       # nn.BatchNorm1d(512, affine=False),
       nn.Linear(128, 64),
@@ -124,7 +126,7 @@ if __name__ == "__main__":
   utils.set_seed(0)
   epochs = 10
   batch_size = 64
-  learning_rate = 1e-3
+  learning_rate = 2e-2
   early_stop_count = 4
   dataloaders = task2.load_cifar10(batch_size)
   model = ExampleModel(image_channels=3, num_classes=10)

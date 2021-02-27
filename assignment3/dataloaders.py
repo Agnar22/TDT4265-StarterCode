@@ -26,6 +26,8 @@ def load_cifar10(batch_size: int, validation_fraction: float = 0.1, resize = Fal
         ])
     else:
         transform_train = transforms.Compose([
+            transforms.ColorJitter(brightness=0.3, contrast=0.0, saturation=0.4, hue=0.00),
+            transforms.RandomHorizontalFlip(),
             transforms.ToTensor(),
             transforms.Normalize(mean, std)
         ])
