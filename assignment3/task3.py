@@ -28,6 +28,7 @@ class ExampleModel(nn.Module):
         padding=2
       ),
       nn.ReLU(inplace=True),
+      nn.BatchNorm2d(num_filters, affine=False),
       nn.Conv2d(
         in_channels=num_filters,
         out_channels=num_filters,
@@ -46,6 +47,7 @@ class ExampleModel(nn.Module):
         padding=2
       ),
       nn.ReLU(inplace=True),
+      nn.BatchNorm2d(2*num_filters, affine=False),
       nn.Conv2d(
         in_channels=2*num_filters,
         out_channels=2*num_filters,
@@ -64,6 +66,7 @@ class ExampleModel(nn.Module):
         padding=2
       ),
       nn.ReLU(inplace=True),
+      nn.BatchNorm2d(4*num_filters, affine=False),
       nn.Conv2d(
         in_channels=4*num_filters,
         out_channels=4*num_filters,
@@ -126,7 +129,7 @@ if __name__ == "__main__":
   utils.set_seed(0)
   epochs = 10
   batch_size = 64
-  learning_rate = 2e-2
+  learning_rate = 1e-3
   early_stop_count = 4
   dataloaders = task2.load_cifar10(batch_size)
   model = ExampleModel(image_channels=3, num_classes=10)
@@ -141,3 +144,4 @@ if __name__ == "__main__":
   )
   trainer.train()
   task2.create_plots(trainer, "task3")
+  print(task2.compute_loss_and_accuracy(dataloaders[2], model, trainer.loss_criterion))

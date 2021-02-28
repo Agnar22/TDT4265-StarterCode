@@ -73,7 +73,7 @@ class Trainer:
 
         # Define our optimizer. SGD = Stochastich Gradient Descent
         if adam:
-            self.optimizer = torch.optim.Adagrad(self.model.parameters(),
+            self.optimizer = torch.optim.Adam(self.model.parameters(),
                                          self.learning_rate, weight_decay=1e-3)
         else:
             self.optimizer = torch.optim.SGD(self.model.parameters(), self.learning_rate)
