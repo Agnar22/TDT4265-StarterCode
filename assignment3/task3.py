@@ -1,7 +1,11 @@
+from typing import Dict
 import torch.nn as nn
+import pathlib
 import utils
 import task2
 import torch
+import matplotlib.pyplot as plt
+from trainer import Trainer
 
 
 def create_conv(in_channels, num_filters, batch_norm, batch_norm_affine):
@@ -28,7 +32,8 @@ class ExampleModel(nn.Module):
                image_channels,
                num_classes,
                batch_norm: bool = False,
-               batch_norm_affine: bool = False):
+               batch_norm_affine: bool = False,
+               dropout: float = 0):
     """
         Is called when model is initialized.
         Args:
@@ -55,14 +60,18 @@ class ExampleModel(nn.Module):
     self.classifier = nn.Sequential(
       nn.Linear(self.num_output_features, 256),
       nn.ReLU(inplace=True),
+      nn.Dropout(dropout),
       # nn.BatchNorm1d(2048, affine=False),
       nn.Linear(256, 128),
       nn.ReLU(inplace=True),
+      nn.Dropout(dropout),
       nn.Linear(128, 128),
       nn.ReLU(inplace=True),
+      nn.Dropout(dropout),
       # nn.BatchNorm1d(512, affine=False),
       nn.Linear(128, 64),
       nn.ReLU(inplace=True),
+      nn.Dropout(dropout),
       # nn.BatchNorm1d(64, affine=False),
       nn.Linear(64, num_classes),
     )
@@ -87,6 +96,26 @@ class ExampleModel(nn.Module):
   def init_weights(self, m):
     if type(m) in [nn.Linear, nn.Conv2d]:
       torch.nn.init.xavier_normal_(m.weight)
+
+
+def create_combined_plots(trainers: Dict[str,Trainer], name: str):
+  plot_path = pathlib.Path("plots")
+  plot_path.mkdir(exist_ok=True)
+  # Save plots and show them
+  plt.figure(figsize=(20, 8))
+  plt.subplot(1, 2, 1)
+  plt.title("Cross Entropy Loss")
+  for trainer_name, trainer in trainers.items():
+    utils.plot_loss(trainer.train_history["loss"], label=f'{trainer_name} - training loss', npoints_to_average=10)
+    utils.plot_loss(trainer.validation_history["loss"], label=f'{trainer_name} - validation loss')
+  plt.legend()
+  plt.subplot(1, 2, 2)
+  plt.title("Accuracy")
+  for trainer_name, trainer in trainers.items():
+    utils.plot_loss(trainer.validation_history["accuracy"], label=f'{trainer_name} - validation accuracy')
+  plt.legend()
+  plt.savefig(plot_path.joinpath(f"{name}_plot.png"))
+  plt.show()
 
 
 if __name__ == "__main__":
