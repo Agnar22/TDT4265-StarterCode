@@ -4,28 +4,6 @@ from PIL import Image
 import torchvision
 import torch
 import numpy as np
-image = Image.open("images/zebra.jpg")
-print("Image shape:", image.size)
-
-model = torchvision.models.resnet18(pretrained=True)
-
-print(model)
-first_conv_layer = model.conv1
-print("First conv layer weight shape:", first_conv_layer.weight.shape)
-print("First conv layer:", first_conv_layer)
-
-# Resize, and normalize the image with the mean and standard deviation
-image_transform = torchvision.transforms.Compose([
-    torchvision.transforms.Resize((224, 224)),
-    torchvision.transforms.ToTensor(),
-    torchvision.transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
-])
-image = image_transform(image)[None]
-print("Image shape:", image.shape)
-
-activation = first_conv_layer(image)
-print("Activation shape:", activation.shape)
-
 
 def torch_image_to_numpy(image: torch.Tensor):
     """
@@ -46,36 +24,40 @@ def torch_image_to_numpy(image: torch.Tensor):
     image = np.moveaxis(image, 0, 2)
     return image
 
+if __name__ == "__main__":
+    image = Image.open("images/zebra.jpg")
+    print("Image shape:", image.size)
 
-indices = [14, 26, 32, 49, 52]
+    model = torchvision.models.resnet18(pretrained=True)
 
-fig, axs = plt.subplots(2,len(indices))
+    print(model)
+    first_conv_layer = model.conv1
+    print("First conv layer weight shape:", first_conv_layer.weight.shape)
+    print("First conv layer:", first_conv_layer)
+
+    # Resize, and normalize the image with the mean and standard deviation
+    image_transform = torchvision.transforms.Compose([
+        torchvision.transforms.Resize((224, 224)),
+        torchvision.transforms.ToTensor(),
+        torchvision.transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+    ])
+    image = image_transform(image)[None]
+    print("Image shape:", image.shape)
+
+    activation = first_conv_layer(image)
+    print("Activation shape:", activation.shape)
+
+    indices = [14, 26, 32, 49, 52]
+
+    fig, axs = plt.subplots(2,len(indices))
 
 
-for i in range(len(indices)):
-    weight_image = torch_image_to_numpy(first_conv_layer.weight[indices[i],:,:,:])
-    act_image = torch_image_to_numpy(activation[0,indices[i],:,:])
+    for i in range(len(indices)):
+        weight_image = torch_image_to_numpy(first_conv_layer.weight[indices[i],:,:,:])
+        act_image = torch_image_to_numpy(activation[0,indices[i],:,:])
 
-    axs[0,i].imshow(weight_image)
-    axs[1,i].imshow(act_image, cmap = 'gray')
+        axs[0,i].imshow(weight_image)
+        axs[1,i].imshow(act_image, cmap = 'gray')
 
-plt.savefig('task4b_plot.png')
-plt.show()
-
-# Task 4 c)
-
-indices_4c = [i for i in range(10)]
-model_reduced = torch.nn.Sequential(*list(model.children())[:-2]) #Drop last 2 ResNet Modules
-
-final_activations = model_reduced(image)
-
-fig, axs = plt.subplots(1,len(indices_4c))
-
-for i in range(len(indices_4c)):
-    print(final_activations.shape)
-    print(indices_4c[i])
-    act_image = torch_image_to_numpy(final_activations[0,indices_4c[i],:,:])
-    axs[i].imshow(act_image, cmap = 'gray')
-
-plt.savefig('task4c_plot.png')
-plt.show()
+    plt.savefig('task4b_plot.png')
+    plt.show()
