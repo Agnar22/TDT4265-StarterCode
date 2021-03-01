@@ -2,13 +2,33 @@ import torch.nn as nn
 import utils
 import task2
 import torch
-from torchsummary import summary
+
+
+def create_conv(in_channels, num_filters, batch_norm, batch_norm_affine):
+  return [
+    nn.Conv2d(in_channels, num_filters, kernel_size=3, stride=1, padding=2),
+    nn.ReLU(inplace=True),
+    nn.BatchNorm2d(num_filters, affine=batch_norm_affine),
+    nn.Conv2d(num_filters, num_filters, kernel_size=3, stride=1, padding=2),
+    nn.ReLU(inplace=True),
+    nn.MaxPool2d(2, stride=2),
+    nn.BatchNorm2d(num_filters, affine=batch_norm_affine)
+  ] if batch_norm else [
+    nn.Conv2d(in_channels, num_filters, kernel_size=3, stride=1, padding=2),
+    nn.ReLU(inplace=True),
+    nn.Conv2d(num_filters, num_filters, kernel_size=3, stride=1, padding=2),
+    nn.ReLU(inplace=True),
+    nn.MaxPool2d(2, stride=2),
+  ]
+
 
 class ExampleModel(nn.Module):
 
   def __init__(self,
                image_channels,
-               num_classes):
+               num_classes,
+               batch_norm: bool = False,
+               batch_norm_affine: bool = False):
     """
         Is called when model is initialized.
         Args:
@@ -20,67 +40,13 @@ class ExampleModel(nn.Module):
     self.num_classes = num_classes
     # Define the convolutional layers
     self.feature_extractor = nn.Sequential(
-      nn.Conv2d(
-        in_channels=image_channels,
-        out_channels=num_filters,
-        kernel_size=3,
-        stride=1,
-        padding=2
-      ),
-      nn.ReLU(inplace=True),
-      nn.BatchNorm2d(num_filters, affine=False),
-      nn.Conv2d(
-        in_channels=num_filters,
-        out_channels=num_filters,
-        kernel_size=3,
-        stride=1,
-        padding=2
-      ),
-      nn.ReLU(inplace=True),
-      nn.MaxPool2d(2, stride=2),
-      nn.BatchNorm2d(num_filters, affine=False),
-      nn.Conv2d(
-        in_channels=num_filters,
-        out_channels=2*num_filters,
-        kernel_size=3,
-        stride=1,
-        padding=2
-      ),
-      nn.ReLU(inplace=True),
-      nn.BatchNorm2d(2*num_filters, affine=False),
-      nn.Conv2d(
-        in_channels=2*num_filters,
-        out_channels=2*num_filters,
-        kernel_size=3,
-        stride=1,
-        padding=2
-      ),
-      nn.ReLU(inplace=True),
-      nn.MaxPool2d(2, stride=2),
-      nn.BatchNorm2d(2*num_filters, affine=False),
-      nn.Conv2d(
-        in_channels=2*num_filters,
-        out_channels=4*num_filters,
-        kernel_size=3,
-        stride=1,
-        padding=2
-      ),
-      nn.ReLU(inplace=True),
-      nn.BatchNorm2d(4*num_filters, affine=False),
-      nn.Conv2d(
-        in_channels=4*num_filters,
-        out_channels=4*num_filters,
-        kernel_size=3,
-        stride=1,
-        padding=2
-      ),
-      nn.ReLU(inplace=True),
-      nn.MaxPool2d(2, stride=2),
-      nn.BatchNorm2d(4 * num_filters, affine=False),
+      *create_conv(image_channels, num_filters, batch_norm, batch_norm_affine),
+      *create_conv(num_filters, 2 * num_filters, batch_norm, batch_norm_affine),
+      *create_conv(2 * num_filters, 4 * num_filters, batch_norm, batch_norm_affine),
     )
     self.feature_extractor.apply(self.init_weights)
     # The output of feature_extractor will be [batch_size, num_filters, 16, 16]
-    self.num_output_features = 128*7*7
+    self.num_output_features = 128 * 7 * 7
     # Initialize our last fully connected layer
     # Inputs all extracted features from the convolutional layers
     # Outputs num_classes predictions, 1 for each class.
@@ -129,10 +95,10 @@ if __name__ == "__main__":
   utils.set_seed(0)
   epochs = 10
   batch_size = 64
-  learning_rate = 1e-3
+  learning_rate = 5e-4
   early_stop_count = 4
   dataloaders = task2.load_cifar10(batch_size)
-  model = ExampleModel(image_channels=3, num_classes=10)
+  model = ExampleModel(image_channels=3, num_classes=10, batch_norm=True, batch_norm_affine=True)
   trainer = task2.Trainer(
     batch_size,
     learning_rate,
