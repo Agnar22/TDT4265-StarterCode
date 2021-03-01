@@ -124,19 +124,45 @@ if __name__ == "__main__":
   utils.set_seed(0)
   epochs = 10
   batch_size = 64
+  dataloaders = task2.load_cifar10(batch_size)
+
+  # Assuming that by "the final train loss..." it means the epoch where the
+  # model had the lowest validation loss.
+  #
+  # Task 3 a)
+  # Best model.
+  learning_rate = 1e-3
+  early_stop_count = 4
+  best_model = ExampleModel(image_channels=3, num_classes=10, batch_norm=True, batch_norm_affine=False, dropout=0.2)
+  best_trainer = task2.Trainer(batch_size, learning_rate, early_stop_count, epochs, best_model, dataloaders, adam=True)
+  best_trainer.train()
+  best_trainer.load_best_model()
+
+  # Other model.
+
+  # Task 3 b)
+  print(f'Train accuracy for best model: {task2.compute_loss_and_accuracy(dataloaders[0], best_trainer.model, best_trainer.loss_criterion)[1]}')
+  print(f'Validation accuracy for best model: {task2.compute_loss_and_accuracy(dataloaders[1], best_trainer.model, best_trainer.loss_criterion)[1]}')
+  print(f'Test accuracy for best model: {task2.compute_loss_and_accuracy(dataloaders[2], best_trainer.model, best_trainer.loss_criterion)[1]}')
+  task2.create_plots(best_trainer, "task3b")
+
+  # Task 3 d)
+  learning_rate = 1e-3
+  early_stop_count = 4
+  best_model_no_batch = ExampleModel(image_channels=3, num_classes=10, batch_norm=False, batch_norm_affine=False,
+                                     dropout=0.2)
+  best_trainer_no_batch = task2.Trainer(batch_size, learning_rate, early_stop_count, epochs, best_model_no_batch,
+                                        dataloaders, adam=True)
+  best_trainer_no_batch.train()
+  create_combined_plots({'best_model': best_trainer, 'best_model_no_batch': best_trainer_no_batch}, "task3d")
+  print(task2.compute_loss_and_accuracy(dataloaders[2], best_model_no_batch, best_trainer.loss_criterion))
+
+  # Task 3 e)
   learning_rate = 5e-4
   early_stop_count = 4
-  dataloaders = task2.load_cifar10(batch_size)
-  model = ExampleModel(image_channels=3, num_classes=10, batch_norm=True, batch_norm_affine=True)
-  trainer = task2.Trainer(
-    batch_size,
-    learning_rate,
-    early_stop_count,
-    epochs,
-    model,
-    dataloaders,
-    adam=True
-  )
-  trainer.train()
-  task2.create_plots(trainer, "task3")
-  print(task2.compute_loss_and_accuracy(dataloaders[2], model, trainer.loss_criterion))
+  improved_best_model = ExampleModel(image_channels=3, num_classes=10, batch_norm=True, batch_norm_affine=True, dropout=0.2)
+  improved_best_trainer = task2.Trainer(batch_size, learning_rate, early_stop_count, epochs, improved_best_model, dataloaders, adam=True)
+  improved_best_trainer.train()
+  improved_best_trainer.load_best_model()
+  task2.create_plots(improved_best_trainer, "task3e")
+  print(f'Test accuracy for improved best model: {task2.compute_loss_and_accuracy(dataloaders[2], improved_best_trainer.model, improved_best_trainer.loss_criterion)[1]}')
