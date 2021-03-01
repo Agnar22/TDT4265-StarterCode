@@ -124,7 +124,7 @@ if __name__ == "__main__":
   utils.set_seed(0)
   epochs = 10
   batch_size = 64
-  dataloaders = task2.load_cifar10(batch_size)
+  dataloaders = task2.load_cifar10(batch_size, augmentation=True)
 
   # Assuming that by "the final train loss..." it means the epoch where the
   # model had the lowest validation loss.

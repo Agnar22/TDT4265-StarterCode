@@ -9,8 +9,8 @@ mean = (0.485, 0.456, 0.406)
 std = (.229, .224, .225)
 
 
-def load_cifar10(batch_size: int, validation_fraction: float = 0.1, resize = False
-                 ) -> typing.List[torch.utils.data.DataLoader]:
+def load_cifar10(batch_size: int, validation_fraction: float = 0.1, resize: bool = False,
+                 augmentation: bool = False) -> typing.List[torch.utils.data.DataLoader]:
     # Note that transform train will apply the same transform for
     # validation!
     if(resize):
@@ -25,10 +25,18 @@ def load_cifar10(batch_size: int, validation_fraction: float = 0.1, resize = Fal
             transforms.Normalize(mean, std)
         ])
     else:
-        transform_train = transforms.Compose([
+        if augmentation:
+          transform_train = transforms.Compose([
+              transforms.ColorJitter(brightness=0.2, contrast=0.0, saturation=0.2, hue=0.00),
+              transforms.RandomHorizontalFlip(),
+              transforms.ToTensor(),
+              transforms.Normalize(mean, std)
+          ])
+        else:
+          transform_train = transforms.Compose([
             transforms.ToTensor(),
             transforms.Normalize(mean, std)
-        ])
+          ])
         transform_test = transforms.Compose([
             transforms.ToTensor(),
             transforms.Normalize(mean, std)
@@ -37,6 +45,11 @@ def load_cifar10(batch_size: int, validation_fraction: float = 0.1, resize = Fal
                                   train=True,
                                   download=True,
                                   transform=transform_train)
+
+    data_val = datasets.CIFAR10('data/cifar10',
+                                  train=True,
+                                  download=True,
+                                  transform=transform_test)
 
     data_test = datasets.CIFAR10('data/cifar10',
                                  train=False,
@@ -58,7 +71,7 @@ def load_cifar10(batch_size: int, validation_fraction: float = 0.1, resize = Fal
                                                    num_workers=2,
                                                    drop_last=True)
 
-    dataloader_val = torch.utils.data.DataLoader(data_train,
+    dataloader_val = torch.utils.data.DataLoader(data_val,
                                                  sampler=validation_sampler,
                                                  batch_size=batch_size,
                                                  num_workers=2)
