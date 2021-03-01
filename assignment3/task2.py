@@ -121,3 +121,7 @@ if __name__ == "__main__":
     )
     trainer.train()
     create_plots(trainer, "task2")
+    trainer.load_best_model()
+    print(f'Train accuracy: {compute_loss_and_accuracy(dataloaders[0], trainer.model, trainer.loss_criterion)}')
+    print(f'Validation accuracy: {compute_loss_and_accuracy(dataloaders[1], trainer.model, trainer.loss_criterion)}')
+    print(f'Test accuracy: {compute_loss_and_accuracy(dataloaders[2], trainer.model, trainer.loss_criterion)}')
