@@ -15,14 +15,14 @@ def load_cifar10(batch_size: int, validation_fraction: float = 0.1, resize = Fal
     # validation!
     if(resize):
         transform_train = transforms.Compose([
+            transforms.Resize(224),
             transforms.ToTensor(),
-            transforms.Normalize(mean, std),
-            transforms.Resize(224) 
+            transforms.Normalize(mean, std)
         ])
         transform_test = transforms.Compose([
+            transforms.Resize(224),
             transforms.ToTensor(),
-            transforms.Normalize(mean, std),
-            transforms.Resize(224) 
+            transforms.Normalize(mean, std)
         ])
     else:
         transform_train = transforms.Compose([
