@@ -49,7 +49,10 @@ if __name__ == "__main__":
     trainer.train()
     create_plots(trainer, "task4a")
 
+    best_model = trainer.load_best_model()
+
+
     #Get final test accuracy
     [_, test_accuracy] = compute_loss_and_accuracy(dataloaders[2], #This is the test set
-                                 model, torch.nn.CrossEntropyLoss())
+                                 best_model, torch.nn.CrossEntropyLoss())
     print("final test accuracy: ", test_accuracy)
