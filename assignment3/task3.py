@@ -50,7 +50,8 @@ class ExampleModel(nn.Module):
                batch_norm: bool = False,
                batch_norm_affine: bool = False,
                dropout: float = 0,
-               kernel_size=3):
+               kernel_size=3,
+               xavier_init: bool=False):
     """
         Is called when model is initialized.
         Args:
@@ -74,7 +75,8 @@ class ExampleModel(nn.Module):
         for sub_layer in layer
       ]
     )
-    self.feature_extractor.apply(self.init_weights)
+    if xavier_init:
+      self.feature_extractor.apply(self.init_weights)
     self.num_output_features = num_output_features
     linear_layers = [num_output_features] + dense_layers
     # Initialize our last fully connected layer
@@ -94,7 +96,8 @@ class ExampleModel(nn.Module):
       ],
       nn.Linear(64, num_classes),
     )
-    self.classifier.apply(self.init_weights)
+    if xavier_init:
+      self.classifier.apply(self.init_weights)
 
   def forward(self, x):
     """
@@ -160,7 +163,8 @@ if __name__ == "__main__":
     batch_norm=True,
     batch_norm_affine=False,
     dropout=0.0,
-    kernel_size=5
+    kernel_size=5,
+    xavier_init = True
   )
   worst_trainer = task2.Trainer(batch_size, learning_rate, early_stop_count, epochs, worst_model, dataloaders,adam=False)
   worst_trainer.train()
@@ -181,7 +185,8 @@ if __name__ == "__main__":
     batch_norm=True,
     batch_norm_affine=False,
     dropout=0.1,
-    kernel_size=3
+    kernel_size=3,
+    xavier_init=True
   )
   best_trainer = task2.Trainer(batch_size, learning_rate, early_stop_count, epochs, best_model, dataloaders, adam=True)
   best_trainer.train()
@@ -205,13 +210,14 @@ if __name__ == "__main__":
     batch_norm=False,
     batch_norm_affine=False,
     dropout=0.1,
-    kernel_size=3
+    kernel_size=3,
+    xavier_init=True
   )
   best_trainer_no_batch = task2.Trainer(batch_size, learning_rate, early_stop_count, epochs, best_model_no_batch,
                                         dataloaders, adam=True)
   best_trainer_no_batch.train()
   create_combined_plots({'best_model': best_trainer, 'best_model_no_batch': best_trainer_no_batch}, "task3d")
-  print(task2.compute_loss_and_accuracy(dataloaders[2], best_model_no_batch, best_trainer.loss_criterion))
+  print(task2.compute_loss_and_accuracy(dataloaders[2], best_model_no_batch, best_trainer_no_batch.loss_criterion))
 
   # Task 3 e)
   learning_rate = 5e-4
