@@ -139,11 +139,29 @@ if __name__ == "__main__":
   epochs = 10
   batch_size = 64
   dataloaders = task2.load_cifar10(batch_size, augmentation=True)
-
   # Assuming that by "the final train loss..." it means the epoch where the
   # model had the lowest validation loss.
   #
   # Task 3 a)
+  # Other model.
+  learning_rate = 1e-2
+  early_stop_count = 4
+  worst_model = ExampleModel(
+    image_channels=3,
+    num_classes=10,
+    conv_layers=[32, 64],
+    num_output_features=64 * 8 * 8,
+    dense_layers=[128, 128, 64],
+    batch_norm=True,
+    batch_norm_affine=False,
+    dropout=0.2,
+    kernel_size=5
+  )
+  worst_trainer = task2.Trainer(batch_size, learning_rate, early_stop_count, epochs, worst_model, dataloaders,adam=False)
+  worst_trainer.train()
+  worst_trainer.load_best_model()
+  print(f'Test accuracy for worst model: {task2.compute_loss_and_accuracy(dataloaders[2], worst_trainer.model, worst_trainer.loss_criterion)[1]}')
+
   # Best model.
   learning_rate = 1e-3
   early_stop_count = 4
@@ -161,8 +179,6 @@ if __name__ == "__main__":
   best_trainer = task2.Trainer(batch_size, learning_rate, early_stop_count, epochs, best_model, dataloaders, adam=True)
   best_trainer.train()
   best_trainer.load_best_model()
-
-  # Other model.
 
   # Task 3 b)
   print(f'Train accuracy for best model: {task2.compute_loss_and_accuracy(dataloaders[0], best_trainer.model, best_trainer.loss_criterion)[1]}')
