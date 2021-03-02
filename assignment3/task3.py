@@ -143,7 +143,7 @@ if __name__ == "__main__":
   # model had the lowest validation loss.
   #
   # Task 3 a)
-  # Other model.
+  # Worst model.
   learning_rate = 1e-2
   early_stop_count = 4
   worst_model = ExampleModel(
@@ -151,15 +151,17 @@ if __name__ == "__main__":
     num_classes=10,
     conv_layers=[32, 64],
     num_output_features=64 * 8 * 8,
-    dense_layers=[128, 128, 64],
+    dense_layers=[256, 128, 64],
     batch_norm=True,
     batch_norm_affine=False,
-    dropout=0.2,
+    dropout=0.0,
     kernel_size=5
   )
   worst_trainer = task2.Trainer(batch_size, learning_rate, early_stop_count, epochs, worst_model, dataloaders,adam=False)
   worst_trainer.train()
   worst_trainer.load_best_model()
+  print(f'Train accuracy for worst model: {task2.compute_loss_and_accuracy(dataloaders[0], worst_trainer.model, worst_trainer.loss_criterion)[1]}')
+  print(f'Validation accuracy for worst model: {task2.compute_loss_and_accuracy(dataloaders[1], worst_trainer.model, worst_trainer.loss_criterion)[1]}')
   print(f'Test accuracy for worst model: {task2.compute_loss_and_accuracy(dataloaders[2], worst_trainer.model, worst_trainer.loss_criterion)[1]}')
 
   # Best model.
@@ -173,7 +175,7 @@ if __name__ == "__main__":
     dense_layers=[256, 128, 128, 64],
     batch_norm=True,
     batch_norm_affine=False,
-    dropout=0.2,
+    dropout=0.1,
     kernel_size=3
   )
   best_trainer = task2.Trainer(batch_size, learning_rate, early_stop_count, epochs, best_model, dataloaders, adam=True)
@@ -197,7 +199,7 @@ if __name__ == "__main__":
     dense_layers=[256, 128, 128, 64],
     batch_norm=False,
     batch_norm_affine=False,
-    dropout=0.2,
+    dropout=0.1,
     kernel_size=3
   )
   best_trainer_no_batch = task2.Trainer(batch_size, learning_rate, early_stop_count, epochs, best_model_no_batch,
