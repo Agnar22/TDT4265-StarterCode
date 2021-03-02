@@ -28,7 +28,8 @@ files_to_include = {
     "task4c": [".py"],
     "trainer": [".py"],
     "utils": [".py"],
-    "dataloaders": [".py"]
+    "dataloaders": [".py"],
+    "images/zebra": [".jpg"]
 }
 zipfile_path = "assignment_code.zip"
 print("-"*80)
