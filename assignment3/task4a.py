@@ -52,7 +52,6 @@ if __name__ == "__main__":
     #Get final test accuracy (for the best model with respect to the validation set)
 
     trainer.load_best_model()
-    trainer.model.eval()
     
     [_, test_accuracy] = compute_loss_and_accuracy(dataloaders[2], #This is the test set
                                  trainer.model, torch.nn.CrossEntropyLoss())

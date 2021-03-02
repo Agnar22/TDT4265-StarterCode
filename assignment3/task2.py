@@ -52,7 +52,6 @@ class ExampleModel(nn.Module):
             nn.MaxPool2d(2, stride=2)
         )
         self.feature_extractor
-        # The output of feature_extractor will be [batch_size, num_filters, 16, 16]
         self.num_output_features = 128*4*4
         # Initialize our last fully connected layer
         # Inputs all extracted features from the convolutional layers
