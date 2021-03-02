@@ -22,10 +22,12 @@ def query(question, options):
 files_to_include = {
     "task2": [".py"],
     "task2_train": [".ipynb"],
+    "task3": [".py"],
+    "task4a": [".py"],
     "task4b": [".py"],
+    "task4c": [".py"],
     "trainer": [".py"],
     "utils": [".py"],
-    "mnist": [".py"],
     "dataloaders": [".py"]
 }
 zipfile_path = "assignment_code.zip"
