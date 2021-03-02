@@ -169,6 +169,7 @@ if __name__ == "__main__":
   worst_trainer = task2.Trainer(batch_size, learning_rate, early_stop_count, epochs, worst_model, dataloaders,adam=False)
   worst_trainer.train()
   worst_trainer.load_best_model()
+  print(f'Train losses for worst model: {worst_trainer.train_history["loss"][-1]}')
   print(f'Train accuracy for worst model: {task2.compute_loss_and_accuracy(dataloaders[0], worst_trainer.model, worst_trainer.loss_criterion)[1]}')
   print(f'Validation accuracy for worst model: {task2.compute_loss_and_accuracy(dataloaders[1], worst_trainer.model, worst_trainer.loss_criterion)[1]}')
   print(f'Test accuracy for worst model: {task2.compute_loss_and_accuracy(dataloaders[2], worst_trainer.model, worst_trainer.loss_criterion)[1]}')
@@ -193,6 +194,7 @@ if __name__ == "__main__":
   best_trainer.load_best_model()
 
   # Task 3 b)
+  print(f'Train losses for best model: {best_trainer.train_history["loss"][-1]}')
   print(f'Train accuracy for best model: {task2.compute_loss_and_accuracy(dataloaders[0], best_trainer.model, best_trainer.loss_criterion)[1]}')
   print(f'Validation accuracy for best model: {task2.compute_loss_and_accuracy(dataloaders[1], best_trainer.model, best_trainer.loss_criterion)[1]}')
   print(f'Test accuracy for best model: {task2.compute_loss_and_accuracy(dataloaders[2], best_trainer.model, best_trainer.loss_criterion)[1]}')
