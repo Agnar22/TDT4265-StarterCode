@@ -5,24 +5,29 @@ import typing
 import numpy as np
 np.random.seed(0)
 
-mean = (0.485, 0.456, 0.406)
-std = (.229, .224, .225)
+mean = (0.5, 0.5, 0.5)
+std = (.25, .25, .25)
+
+mean_task4 = (0.485, 0.456, 0.406)
+std_task4 = (.229, .224, .225)
 
 
 def load_cifar10(batch_size: int, validation_fraction: float = 0.1, resize: bool = False,
                  augmentation: bool = False) -> typing.List[torch.utils.data.DataLoader]:
     # Note that transform train will apply the same transform for
     # validation!
+
+    #Resize is used in order to make the code compatible between task 2,3 and 4.
     if(resize):
         transform_train = transforms.Compose([
             transforms.Resize(224),
             transforms.ToTensor(),
-            transforms.Normalize(mean, std)
+            transforms.Normalize(mean_task4, std_task4)
         ])
         transform_test = transforms.Compose([
             transforms.Resize(224),
             transforms.ToTensor(),
-            transforms.Normalize(mean, std)
+            transforms.Normalize(mean_task4, std_task4)
         ])
     else:
         if augmentation:

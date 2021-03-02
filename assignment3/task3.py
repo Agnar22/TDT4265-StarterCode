@@ -10,6 +10,9 @@ from typing import List
 
 
 def create_conv(in_channels, num_filters, batch_norm, batch_norm_affine, kernel_size):
+  """
+  Creates a convolutional module to be stacked in a CNN network.
+  """
   return [
     nn.Conv2d(in_channels, num_filters, kernel_size=kernel_size, stride=1, padding=2),
     nn.ReLU(inplace=True),
@@ -27,6 +30,9 @@ def create_conv(in_channels, num_filters, batch_norm, batch_norm_affine, kernel_
   ]
 
 def create_linear(in_shape, nodes, dropout):
+  """
+  Creates an affine module for a CNN network.
+  """
   return [
     nn.Linear(in_shape, nodes),
     nn.ReLU(inplace=True),
@@ -69,7 +75,6 @@ class ExampleModel(nn.Module):
       ]
     )
     self.feature_extractor.apply(self.init_weights)
-    # The output of feature_extractor will be [batch_size, num_filters, 16, 16]
     self.num_output_features = num_output_features
     linear_layers = [num_output_features] + dense_layers
     # Initialize our last fully connected layer

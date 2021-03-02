@@ -36,7 +36,7 @@ if __name__ == "__main__":
     learning_rate = 5e-4
     early_stop_count = 4
     dataloaders = load_cifar10(batch_size, resize=True)
-    model = transferLearningModel()#image_channels=3, num_classes=10)
+    model = transferLearningModel()
     trainer = Trainer(
         batch_size,
         learning_rate,
