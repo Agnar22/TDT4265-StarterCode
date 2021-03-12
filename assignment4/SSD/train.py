@@ -36,7 +36,9 @@ def start_train(cfg):
     model = torch_utils.to_cuda(model)
 
     optimizer = torch.optim.Adam(
-        model.parameters()
+        model.parameters(),
+        lr=cfg.SOLVER.LR,
+        weight_decay=cfg.SOLVER.WEIGHT_DECAY
     )
 
 
