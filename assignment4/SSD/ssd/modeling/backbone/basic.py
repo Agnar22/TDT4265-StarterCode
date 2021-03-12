@@ -21,48 +21,75 @@ class BasicModel(torch.nn.Module):
         self.output_channels = output_channels
         image_channels = cfg.MODEL.BACKBONE.INPUT_CHANNELS
         self.output_feature_shape = cfg.MODEL.PRIORS.FEATURE_MAPS
-        print(output_channels, image_channels, self.output_feature_shape)
 
         self.first_block = nn.Sequential(
             nn.Conv2d(image_channels, 32, 3, padding=1),
+            nn.BatchNorm2d(32),
             nn.MaxPool2d(2, 2),
             nn.ReLU(),
             nn.Conv2d(32, 64, 3, padding=1),
+            nn.BatchNorm2d(64),
             nn.MaxPool2d(2, 2),
             nn.ReLU(),
             nn.Conv2d(64, 64, 3, padding=1),
+            nn.BatchNorm2d(64),
             nn.ReLU(),
             nn.Conv2d(64, self.output_channels[0], 3, stride=2, padding=1)
         )
         self.second_block = nn.Sequential(
+            nn.BatchNorm2d(self.output_channels[0]),
             nn.ReLU(),
             nn.Conv2d(self.output_channels[0], 128, 3, padding=1),
+            nn.BatchNorm2d(128),
+            nn.ReLU(),
+            nn.Conv2d(128, 128, 3, padding=1),
+            nn.BatchNorm2d(128),
             nn.ReLU(),
             nn.Conv2d(128, self.output_channels[1], 3, stride=2, padding=1)
         )
         self.third_block = nn.Sequential(
+            nn.BatchNorm2d(self.output_channels[1]),
             nn.ReLU(),
             nn.Conv2d(self.output_channels[1], 256, 3, stride=2, padding=1),
+            nn.BatchNorm2d(256),
+            nn.ReLU(),
+            nn.Conv2d(256, 256, 3, padding=1),
+            nn.BatchNorm2d(256),
             nn.ReLU(),
             nn.Conv2d(256, self.output_channels[2], 3, padding=1)
         )
         self.fourth_block = nn.Sequential(
+            nn.BatchNorm2d(self.output_channels[2]),
             nn.ReLU(),
-            nn.Conv2d(self.output_channels[2], 128, 3, padding=1),
+            nn.Conv2d(self.output_channels[2], 256, 3, padding=1),
+            nn.BatchNorm2d(256),
             nn.ReLU(),
-            nn.Conv2d(128, self.output_channels[3], 3, stride=2, padding=1)
+            nn.Conv2d(256, 256, 3, padding=1),
+            nn.BatchNorm2d(256),
+            nn.ReLU(),
+            nn.Conv2d(256, self.output_channels[3], 3, stride=2, padding=1)
         )
         self.fifth_block = nn.Sequential(
+            nn.BatchNorm2d(self.output_channels[3]),
             nn.ReLU(),
-            nn.Conv2d(self.output_channels[3], 128, 3, padding=1),
+            nn.Conv2d(self.output_channels[3], 256, 3, padding=1),
+            nn.BatchNorm2d(256),
             nn.ReLU(),
-            nn.Conv2d(128, self.output_channels[4], 3, stride=2, padding=1)
+            nn.Conv2d(256, 256, 3, padding=1),
+            nn.BatchNorm2d(256),
+            nn.ReLU(),
+            nn.Conv2d(256, self.output_channels[4], 3, stride=2, padding=1)
         )
         self.sixth_block = nn.Sequential(
+            nn.BatchNorm2d(self.output_channels[4]),
             nn.ReLU(),
-            nn.Conv2d(self.output_channels[4], 128, 3, padding=1),
+            nn.Conv2d(self.output_channels[4], 256, 3, padding=1),
+            nn.BatchNorm2d(256),
             nn.ReLU(),
-            nn.Conv2d(128, self.output_channels[5], 3, padding=0)
+            nn.Conv2d(256, 256, 3, padding=1),
+            nn.BatchNorm2d(256),
+            nn.ReLU(),
+            nn.Conv2d(256, self.output_channels[5], 3, padding=0)
         )
         self.blocks = [
             self.first_block, self.second_block, self.third_block,
