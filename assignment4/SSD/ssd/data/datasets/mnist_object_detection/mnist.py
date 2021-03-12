@@ -23,6 +23,7 @@ SAVE_PATH = pathlib.Path("data/original_mnist")
 
 def download_mnist():
     SAVE_PATH.mkdir(exist_ok=True, parents=True)
+    base_url = "https://github.com/mkolod/MNIST/raw/master/"
     for name in filename:
         filepath = SAVE_PATH.joinpath(name[1])
         if filepath.is_file():
