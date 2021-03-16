@@ -13,7 +13,7 @@ DATASETS:
 SOLVER:
     MAX_ITER: 15000
     GAMMA: 0.1
-    BATCH_SIZE: 16
+    BATCH_SIZE: 64
     LR: 1e-3
     WEIGHT_DECAY: 1e-4
 OUTPUT_DIR: 'outputs/basic'
