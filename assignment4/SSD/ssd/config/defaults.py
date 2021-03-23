@@ -19,6 +19,7 @@ cfg.MODEL.BACKBONE.NAME = 'vgg'
 cfg.MODEL.BACKBONE.OUT_CHANNELS = (512, 1024, 512, 256, 256, 256)
 cfg.MODEL.BACKBONE.PRETRAINED = True
 cfg.MODEL.BACKBONE.INPUT_CHANNELS = 3
+cfg.MODEL.BACKBONE.BASIC = True
 
 # -----------------------------------------------------------------------------
 # PRIORS
@@ -76,6 +77,7 @@ cfg.SOLVER.BATCH_SIZE = 32
 cfg.SOLVER.LR = 1e-3
 cfg.SOLVER.MOMENTUM = 0.9
 cfg.SOLVER.WEIGHT_DECAY = 5e-4
+cfg.SOLVER.OPTIM = "SGD"
 
 # ---------------------------------------------------------------------------- #
 # Specific test options
